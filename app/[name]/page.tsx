@@ -2,11 +2,11 @@
 
 import { useEffect, useState } from "react";
 
-const socket = new WebSocket("ws://localhost:8080/ws");
-
-export default function Home() {
+const RoomPage = ({ params }: { params: { name: string } }) => {
+  const { name } = params;
   const [input, setInput] = useState<string>("");
   const [messages, setMessages] = useState<string[]>([]);
+  const socket = new WebSocket(`ws://localhost:8080/${name}`);
 
   useEffect(() => {
     socket.onmessage = (event) => {
@@ -34,22 +34,15 @@ export default function Home() {
         </button>
       </div>
       <div className="mt-10 text-center">
-        <h1 className="text-3xl mb-8 font-bold">
-          Messages in the Testing Room
-        </h1>
+        <h1 className="text-3xl mb-8 font-bold">Messages in this Room</h1>
         {messages.map((message, index) => (
           <div key={index} className="gap-y-2">
             {index + 1}). {message}
           </div>
         ))}
       </div>
-
-      <div className="mt-10 flex flex-col items-center gap-y-2">
-        <h1 className="text-3xl">
-          Done Testing! Then come and create your own private rooms.
-        </h1>
-        <button className="p-2 bg-blue-500 rounded-md">Create Room</button>
-      </div>
     </div>
   );
-}
+};
+
+export default RoomPage;
